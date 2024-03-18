@@ -2,6 +2,11 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: [
-    'vuetify-nuxt-module'
+    'vuetify-nuxt-module',
+    '@pinia/nuxt',
+    '@pinia-plugin-persistedstate/nuxt',
+  ],
+  css: [
+    '@fortawesome/fontawesome-svg-core/styles.css'
   ]
 })
