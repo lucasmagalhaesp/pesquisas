@@ -80,7 +80,6 @@ export const useCadastroPesquisaStore = defineStore("cadastroPesquisa", {
                     error();
                 });
             });
-            
         },
         editarPesquisa(dados){
             this.id = dados.id;
