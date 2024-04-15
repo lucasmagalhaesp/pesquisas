@@ -44,12 +44,12 @@
 
     const salvarPergunta = () => {
         store.addPergunta(idPergunta, descricao);
-        router.push({ path: "/pesquisas/criar" });
+        router.push({ path: "/pesquisas-cadastradas/criar" });
     }
 
     const cancelar = () => {
         store.cancelarPergunta();
-        router.push({ path: "/pesquisas/criar" });
+        router.push({ path: "/pesquisas-cadastradas/criar" });
     }
 
 </script>

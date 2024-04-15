@@ -2,12 +2,12 @@
     <v-container>
         <v-row>
             <v-col class="text-right">
-                <v-btn color="primary" @click="$router.push({ path: 'pesquisas/criar' })">Criar Pesquisa</v-btn>
+                <v-btn color="primary" @click="$router.push({ path: 'pesquisas-cadastradas/criar' })">Criar Pesquisa</v-btn>
             </v-col>
         </v-row>
         <v-row>
             <v-col>
-                <listar-pesquisas />
+                <listar-pesquisas-cadastradas />
             </v-col>
         </v-row>
     </v-container>

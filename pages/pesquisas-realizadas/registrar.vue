@@ -2,21 +2,21 @@
     <v-container>
         <v-row>
             <v-col>
-                <form-cadastrar-pesquisas />
+                <h2>Registrar Pesquisa</h2>
             </v-col>
         </v-row>
         <v-row>
             <v-col>
-                <v-btn color="primary" @click="$router.push({ path: '/pesquisas/add-pergunta' })">Adicionar Pergunta</v-btn>
+                <registrar-pesquisas-dados-usuario />
             </v-col>
         </v-row>
         <v-row>
             <v-col>
-                <listar-perguntas />
+                <registrar-pesquisas-perguntas />
             </v-col>
         </v-row>
         <v-row>
-            <v-col>
+            <v-col class="gutter-sm">
                 <v-btn color="success" @click="salvar">Salvar</v-btn>
                 <v-btn color="error" @click="cancelar">Cancelar</v-btn>
             </v-col>
@@ -25,18 +25,22 @@
 </template>
 
 <script setup>
-    import { useCadastroPesquisaStore } from "@/stores/cadastrarPesquisas"
-    const store = useCadastroPesquisaStore();
+    import { usePesquisasRealizadas } from "@/stores/pesquisasRealizadas"
+    const store = usePesquisasRealizadas();
     const router = useRouter();
 
     const salvar = () => {
-        store.salvarPesquisa()
-        .then(() => router.push({ path: "/pesquisas" }))
+        store.salvar()
+        .then(() => {
+            store.limparDados();
+            router.push({ path: "/pesquisas-realizadas" });
+        })
         .catch(() => alert("Erro ao salvar pesquisa"));
     }
 
     const cancelar = () => {
-        store.cancelarPesquisa();
-        router.push({ path: "/pesquisas" });
+        store.limparDados();
+        router.push({ path: "/pesquisas-realizadas" });
     }
+
 </script>
