@@ -56,7 +56,7 @@ export const useCadastroPesquisaStore = defineStore("cadastroPesquisa", {
             this.perguntas = [];
             this.respostas = [];
         },
-        salvarPesquisa(){
+        salvarPesquisa(token){
             return new Promise((ok, error) => {
                 $fetch("http://localhost:8000/api/pesquisas", {
                     method: 'POST',
@@ -69,7 +69,8 @@ export const useCadastroPesquisaStore = defineStore("cadastroPesquisa", {
                             tipo_entrevistado: this.tipo_entrevistado,
                             perguntas: this.perguntas
                         }
-                    }
+                    },
+                    headers: { Authorization: `Bearer ${token}` }
                 })
                 .then(resposta => {
                     if (resposta.sucesso) ok();
@@ -77,7 +78,7 @@ export const useCadastroPesquisaStore = defineStore("cadastroPesquisa", {
                 })
                 .catch(erro => {
                     console.error(erro);
-                    error();
+                    error(erro);
                 });
             });
         },

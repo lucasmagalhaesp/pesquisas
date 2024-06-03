@@ -5,7 +5,21 @@
             :headers="cabecalho"
             :loading="carregando">
             <template v-slot:top>
-                <h1 class="text-center bg-primary">Pesquisas Realizadas</h1>
+                <v-row class="mb-1">
+                    <v-col>
+                        <h1 class="cor1">Pesquisas Realizadas</h1>
+                    </v-col>
+                    <v-col class="text-right">
+                        <v-btn prepend-icon="mdi-clipboard-list" class="bg-cor4" @click="$router.push({ path: '/pesquisas-realizadas/registrar' })">Registrar Pesquisa</v-btn>
+                    </v-col>
+                </v-row>
+            </template>
+            <template v-slot:headers="{ columns }">
+                <tr class="bg-cor3">
+                    <template v-for="column in columns" :key="column.key">
+                        <th>{{ column.title }}</th>
+                    </template>
+                </tr>
             </template>
             <template v-slot:item.botoes="{ item }">
                 <v-btn rounded="0" size="small" icon="mdi-pencil" color="primary" @click="editar(item.id)" />
@@ -39,7 +53,9 @@
     let dadosPesquisa = reactive({data:[]});
     async function getDados(){
         carregando.value = true;
-        let pesquisas = await $fetch('http://localhost:8000/api/pesquisasRealizadas');
+        let pesquisas = await $fetch('http://localhost:8000/api/pesquisasRealizadas', {
+            headers: { Authorization: `Bearer ${sessionStorage.getItem("pesquisaTokenUsuario")}` }
+        });
         dadosPesquisa.data = pesquisas.dados.map(item => {
             return {
                 id: item.id,
@@ -52,7 +68,9 @@
     }
 
     const editar = id => {
-        $fetch(`http://localhost:8000/api/pesquisas/${id}`)
+        $fetch(`http://localhost:8000/api/pesquisas/${id}`, {
+            headers: { Authorization: `Bearer ${sessionStorage.getItem("pesquisaTokenUsuario")}` }
+        })
         .then(resposta => {
             store.editarPesquisa(resposta.dados);
             router.push({ path: "/pesquisas/criar" });

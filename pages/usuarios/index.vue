@@ -1,10 +1,10 @@
 <template>
     <v-container>
-        <v-row>
+        <!-- <v-row>
             <v-col class="text-right">
                 <v-btn color="primary" @click="$router.push({ path: 'usuarios/criar' })">Novo Usuário</v-btn>
             </v-col>
-        </v-row>
+        </v-row> -->
         <v-row>
             <v-col>
                 <listar-usuarios />
@@ -15,4 +15,10 @@
 
 <script setup>
     const router = useRouter()
+    definePageMeta({
+        middleware: [
+            "auth",
+            "permissao"
+        ]
+    });
 </script>

@@ -5,7 +5,7 @@ export const useCadastroUsuarioStore = defineStore("cadastroUsuario", {
         email: "",
         senha: "",
         confirmar_senha: "",
-        perfil_usuario_id: "2",
+        perfil_usuario_id: 3,
         ativo: "S"
     }),
     actions: {
@@ -15,10 +15,10 @@ export const useCadastroUsuarioStore = defineStore("cadastroUsuario", {
             this.email = dados.email;
             this.senha = "";
             this.confirmar_senha = "";
-            this.perfil_usuario_id = dados.perfil_usuario_id,
+            this.perfil_usuario_id = parseInt(dados.perfil_usuario_id),
             this.ativo = dados.ativo;
         },
-        salvarUsuario(){
+        salvarUsuario(token){
             return new Promise((ok, error) => {
                 $fetch("http://localhost:8000/api/usuarios", {
                     method: "POST",
@@ -32,26 +32,27 @@ export const useCadastroUsuarioStore = defineStore("cadastroUsuario", {
                             perfil_usuario_id: this.perfil_usuario_id,
                             ativo: this.ativo
                         }
-                    }
+                    },
+                    headers: { Authorization: `Bearer ${token}` }
                 })
                 .then(resposta => {
                     if (resposta.sucesso) ok();
                     else error();
                 })
                 .catch(erro => {
-                    console.error(erro);
-                    error();
+                    console.error("Passou aqui");
+                    error(erro);
                 });
             });
         },
         limparDados(){
-            this.id = null,
-            this.nome = "",
-            this.email = "",
-            this.senha = "",
-            this.confirmar_senha = "",
-            this.perfil_usuario_id = 2,
-            this.ativo = "S"
+            this.id = null;
+            this.nome = "";
+            this.email = "";
+            this.senha = "";
+            this.confirmar_senha = "";
+            this.perfil_usuario_id = 3;
+            this.ativo = "S";
         },
     },
     persist: {

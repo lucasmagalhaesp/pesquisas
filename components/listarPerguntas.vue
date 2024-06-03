@@ -4,7 +4,21 @@
         :headers="cabecalho"
     >    
         <template v-slot:top>
-            <h1 class="text-center bg-primary">Perguntas</h1>
+             <v-row class="mb-1">
+                <v-col>
+                    <h1 class="bg-white cor1">Perguntas</h1>
+                </v-col>
+                <v-col class="text-right">
+                    <v-btn prepend-icon="mdi-plus" class="bg-cor4" @click="$router.push({ path: '/pesquisas-cadastradas/add-pergunta' })">Adicionar Pergunta</v-btn>
+                </v-col>
+            </v-row>
+        </template>
+        <template v-slot:headers="{ columns }">
+            <tr class="bg-cor3">
+                <template v-for="column in columns" :key="column.key">
+                    <th>{{ column.title }}</th>
+                </template>
+            </tr>
         </template>
         <template v-slot:item.botoes="{ item }">
             <v-btn rounded="0" size="small" icon="mdi-pencil" color="primary" @click="editar(item.id)" />
@@ -26,7 +40,7 @@
     ];
 
     const editar = id => {
-        router.push({ path: `/pesquisas/editar-pergunta/${id}` });
+        router.push({ path: `/pesquisas-cadastradas/editar-pergunta/${id}` });
     }
 
     const excluir = id => {

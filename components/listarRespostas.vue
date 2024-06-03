@@ -2,11 +2,11 @@
     <div>
         <v-form>
             <v-row>
-                <v-col cols="12" md="4">
-                    <v-textarea v-model="resposta" rows="2" label="Adicionar resposta:"></v-textarea>
+                <v-col cols="12" md="8">
+                    <v-textarea v-model="resposta" rows="2" label="Adicionar resposta:" density="compact"></v-textarea>
                 </v-col>
-                <v-col cols="12" md="3">
-                    <v-btn color="info" @click="addResposta">{{ idResposta == null ? "Adicionar Resposta" : "Atualizar Resposta" }}</v-btn>
+                <v-col cols="12" md="4">
+                    <v-btn prepend-icon="mdi-content-save" color="success" @click="addResposta">{{ idResposta == null ? "Salvar Resposta" : "Atualizar Resposta" }}</v-btn>
                 </v-col>
             </v-row>
         </v-form>
@@ -16,7 +16,21 @@
             :headers="cabecalho"
         >    
             <template v-slot:top>
-                <h1 class="text-center bg-primary">Respostas</h1>
+                <v-row class="mb-1">
+                    <v-col>
+                        <h1 class="bg-white cor1">Respostas</h1>
+                    </v-col>
+                    <!-- <v-col class="text-right">
+                        <v-btn class="bg-cor4" @click="addResposta">Adicionar Resposta</v-btn>
+                    </v-col> -->
+                </v-row>
+            </template>
+            <template v-slot:headers="{ columns }">
+                <tr class="bg-cor3">
+                    <template v-for="column in columns" :key="column.key">
+                        <th>{{ column.title }}</th>
+                    </template>
+                </tr>
             </template>
             <template v-slot:item.botoes="{ item }">
                 <v-btn rounded="0" size="small" icon="mdi-pencil" color="primary" @click="editar(item.id)" />

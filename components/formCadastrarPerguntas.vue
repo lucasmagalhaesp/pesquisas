@@ -3,7 +3,7 @@
         <v-form>
             <v-row>
                 <v-col cols="12" md="12">
-                    <v-textarea rows="2" v-model="descricao" label="Descrição:"></v-textarea>
+                    <v-textarea rows="2" v-model="descricao" label="Descrição:" density="compact"></v-textarea>
                 </v-col>
                 <!-- <v-col cols="12" md="4">
                     <v-select
@@ -15,8 +15,8 @@
             </v-row>
             <v-row>
                 <v-col class="gutter-sm">
-                    <v-btn color="success" @click="salvarPergunta">Salvar</v-btn>
-                    <v-btn color="error" @click="cancelar">Cancelar</v-btn>
+                    <v-btn prepend-icon="mdi-content-save" color="success" @click="salvarPergunta">Salvar</v-btn>
+                    <v-btn prepend-icon="mdi-cancel" color="error" @click="cancelar">Cancelar</v-btn>
                 </v-col>
             </v-row>
         </v-form>

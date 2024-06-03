@@ -1,10 +1,10 @@
 <template>
     <v-row>
         <v-col cols="12" md="6">
-            <v-text-field label="Nome:" />
+            <v-text-field label="Nome:" density="compact" />
         </v-col>
         <v-col cols="12" md="6">
-            <v-text-field label="E-mail:" />
+            <v-text-field label="E-mail:" density="compact" />
         </v-col>
     </v-row>
 </template>
