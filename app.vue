@@ -6,13 +6,13 @@
           <v-app-bar
             color="primary"
             prominent
-            style="padding: 0 80px"
+            :style="display.xs ? 'padding: 0 20px' : 'padding: 0 80px'"
           >
             <v-app-bar-nav-icon v-if="store.logado && store.perfilUsuario == 'ADMIN'" variant="text" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
 
             <v-toolbar-title>Pesquisas de Opinião</v-toolbar-title>
 
-            <v-spacer></v-spacer>
+            <v-spacer v-if="!display.xs"></v-spacer>
 
             <!-- <template v-if="$vuetify.display.mdAndUp">
               <v-btn icon="mdi-magnify" variant="text"></v-btn>
@@ -20,16 +20,16 @@
               <v-btn icon="mdi-filter" variant="text"></v-btn>
             </template> -->
 
-            <v-btn v-if="store.logado" size="small" color="red-darken-4" variant="flat" @click="logout">Sair</v-btn>
+            <v-btn v-if="store.logado && !display.xs" size="small" color="red-darken-4" variant="flat" @click="abrirModal = true">Sair</v-btn>
           </v-app-bar>
 
           <v-navigation-drawer
             v-model="drawer"
-            :location="$vuetify.display.mobile ? 'bottom' : undefined"
             temporary
           >
             <v-list>
-              <v-list-item v-for="item in items" :key="item.value" @click="$router.push({ path: `/${item.value}` })">{{ item.title }}</v-list-item>
+              <v-list-item class="cor1" v-for="item in items" :key="item.value" @click="$router.push({ path: `/${item.value}` })">{{ item.title }}</v-list-item>
+              <v-list-item class="text-error" @click="abrirModal = true">Sair</v-list-item>
             </v-list>
           </v-navigation-drawer>
 
@@ -55,6 +55,28 @@
       </v-row>
     </v-footer>
     </v-app>
+    <v-dialog max-width="500" v-model="abrirModal">
+        <v-card title="Confirmação" class="bg-error">
+            <v-card-text>
+                Deseja realmente sair do sistema?
+            </v-card-text>
+
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                    text="SIM"
+                    @click="logout"
+                    color="default"
+                    text-color="error"
+                    variant="flat"
+                ></v-btn>
+                <v-btn
+                    text="NÃO"
+                    @click="abrirModal = false"
+                ></v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -62,10 +84,13 @@
     import "~/assets/css/app.css"
     import { watch, ref } from "vue"
     import { useGeralStore } from "@/stores/geral"
+    import { useDisplay } from 'vuetify';
+    const display = ref(useDisplay());
     const store = useGeralStore();
     const router = useRouter();
     const drawer = ref(false);
     const group = ref(null);
+    let abrirModal = ref(false);
     const items = [
         {
             title: 'Home',
@@ -88,6 +113,7 @@
     watch(() => group, (val, oldVal) => drawer.value = false)
 
     const logout = () => {
+      abrirModal.value = false;
       $fetch("http://localhost:8000/api/auth/logout", {
           method: "POST",
           headers: { Authorization: `Bearer ${sessionStorage.getItem("pesquisaTokenUsuario")}` }

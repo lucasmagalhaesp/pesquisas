@@ -1,16 +1,18 @@
 <template>
     <v-container>
         <v-row>
-            <v-col class="text-h5 font-weight-bold cor1">Cadastrar Usuário</v-col>
+            <v-col cols="12">
+                <utilitarios-titulo-pagina :titulo="![null, undefined, ''].includes(store.id) ? 'Editar Usuário' : 'Cadastrar Usuário'" /> 
+            </v-col>
         </v-row>
         <v-row class="align-center justify-center">
-            <v-col cols="8">
+            <v-col cols="12" md="8">
                 <form-cadastrar-usuarios />
             </v-col>
-            <v-col cols="12" class="d-flex justify-center text-center ga-2">
-                <v-btn prepend-icon="mdi-content-save" color="success" @click="salvar">Salvar</v-btn>
-                <v-btn prepend-icon="mdi-cancel" color="error" @click="cancelar">Cancelar</v-btn>
-            </v-col>
+        </v-row>
+        <v-row class="align-center justify-center ga-4 px-3 mb-3">
+            <v-btn :block="display.xs" :size="display.xs ? 'large' : 'default'" prepend-icon="mdi-content-save" color="success" @click="salvar">Salvar</v-btn>
+            <v-btn :block="display.xs" :size="display.xs ? 'large' : 'default'" prepend-icon="mdi-cancel" color="error" @click="cancelar">Cancelar</v-btn>
         </v-row>
         <v-overlay
             :model-value="carregando"
@@ -47,7 +49,7 @@
     const store = useCadastroUsuarioStore();
     const router = useRouter();
     import { useDisplay } from 'vuetify';
-    const { lg, sm, xs } = useDisplay();
+    const display = ref(useDisplay());
     definePageMeta({
         middleware: [
             "auth",

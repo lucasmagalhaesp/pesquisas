@@ -1,7 +1,9 @@
 <template>
     <v-container>
         <v-row>
-            <v-col class="text-h5 font-weight-bold cor1">Cadastrar Pesquisa</v-col>
+            <v-col cols="12">
+                <utilitarios-titulo-pagina titulo="Cadastrar Pesquisa" /> 
+            </v-col>
         </v-row>
         <v-row>
             <v-col cols="12" md="4">
@@ -15,11 +17,9 @@
                 </v-row>
             </v-col>
         </v-row>
-        <v-row>
-            <v-col class="d-flex justify-center text-center ga-2">
-                <v-btn prepend-icon="mdi-content-save" color="success" @click="salvar">Salvar</v-btn>
-                <v-btn prepend-icon="mdi-cancel" color="error" @click="cancelar">Cancelar</v-btn>
-            </v-col>
+        <v-row class="align-center justify-center ga-4 px-3 mb-3">
+            <v-btn :block="display.xs" :size="display.xs ? 'large' : 'default'" prepend-icon="mdi-content-save" color="success" @click="salvar">Salvar</v-btn>
+            <v-btn :block="display.xs" :size="display.xs ? 'large' : 'default'" prepend-icon="mdi-cancel" color="error" @click="cancelar">Cancelar</v-btn>
         </v-row>
     </v-container>
     <v-dialog max-width="500" v-model="abrirModal">
@@ -43,6 +43,8 @@
     import { useCadastroPesquisaStore } from "@/stores/cadastrarPesquisas"
     const store = useCadastroPesquisaStore();
     const router = useRouter();
+    import { useDisplay } from 'vuetify';
+    const display = ref(useDisplay());
     definePageMeta({
         middleware: [
             "auth",

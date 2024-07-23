@@ -1,23 +1,18 @@
 <template>
     <v-container>
         <v-row>
-            <v-col class="text-h5 font-weight-bold cor1">Registrar Pesquisa</v-col>
-        </v-row>
-        <!-- <v-row>
-            <v-col>
-                <registrar-pesquisas-dados-usuario />
+            <v-col cols="12">
+                <utilitarios-titulo-pagina titulo="Registrar Pesquisa" /> 
             </v-col>
-        </v-row> -->
+        </v-row>
         <v-row>
             <v-col>
                 <registrar-pesquisas-perguntas />
             </v-col>
         </v-row>
-        <v-row>
-            <v-col class="d-flex justify-center text-center ga-2">
-                <v-btn prepend-icon="mdi-content-save" color="success" @click="salvar">Salvar</v-btn>
-                <v-btn prepend-icon="mdi-cancel" color="error" @click="cancelar">Cancelar</v-btn>
-            </v-col>
+        <v-row class="align-center justify-center ga-4 px-3 mb-3">
+            <v-btn :block="display.xs" :size="display.xs ? 'large' : 'default'" prepend-icon="mdi-content-save" color="success" @click="salvar">Salvar</v-btn>
+            <v-btn :block="display.xs" :size="display.xs ? 'large' : 'default'" prepend-icon="mdi-cancel" color="error" @click="cancelar">Cancelar</v-btn>
         </v-row>
     </v-container>
     <v-dialog max-width="500" v-model="abrirModal">
@@ -41,6 +36,8 @@
     import { usePesquisasRealizadas } from "@/stores/pesquisasRealizadas"
     const store = usePesquisasRealizadas();
     const router = useRouter();
+    import { useDisplay } from 'vuetify';
+    const display = ref(useDisplay());
     let abrirModal = ref(false);
     let msgErro = ref("");
     definePageMeta({

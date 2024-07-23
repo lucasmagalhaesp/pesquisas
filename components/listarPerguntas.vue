@@ -6,7 +6,7 @@
         <template v-slot:top>
              <v-row class="mb-1">
                 <v-col>
-                    <h1 class="bg-white cor1">Perguntas</h1>
+                    <h1 class="bg-white cor1 text-h6">Perguntas</h1>
                 </v-col>
                 <v-col class="text-right">
                     <v-btn prepend-icon="mdi-plus" class="bg-cor4" @click="$router.push({ path: '/pesquisas-cadastradas/add-pergunta' })">Adicionar Pergunta</v-btn>

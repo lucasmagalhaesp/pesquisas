@@ -1,8 +1,8 @@
 <template>
     <v-container>
-        <v-row>
+        <!-- <v-row>
             <v-col class="text-h5 font-weight-bold cor1">Ver Pesquisa</v-col>
-        </v-row>
+        </v-row> -->
         <v-row>
             <v-col>
                 <registrar-pesquisas-visualizar />

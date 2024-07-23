@@ -1,13 +1,16 @@
+*{
+    font-family: Courier;
+}
 .cor1 { color: #0d8aa6 !important }
 .bg-cor1 { background-color: #0d8aa6 !important; color: #FFF !important }
 .cor2 { color: #2da3bc !important }
 .bg-cor2 { background-color: #2da3bc !important; color: #FFF !important }
 .cor3 { color: #4dbcd3 !important }
-.bg-cor3 { background-color: #4dbcd3 !important; color: #000 !important }
+.bg-cor3 { background-color: #4dbcd3 !important; color: #FFF !important }
 .cor4 { color: #6dd4e9 !important }
 .bg-cor4 { background-color: #6dd4e9 !important; color: #000 !important }
 .cor5 { color: #8dedff !important }
-.bg-cor5 { background-color: #8dedff !important; color: #FFF !important }
+.bg-cor5 { background-color: #8dedff !important; color: #000 !important }
 .cor6 { color: #E3F2FD !important }
 .bg-cor6 { background-color: #E3F2FD !important; color: #000 !important }
 

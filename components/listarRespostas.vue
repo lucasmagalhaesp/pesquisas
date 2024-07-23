@@ -3,10 +3,10 @@
         <v-form>
             <v-row>
                 <v-col cols="12" md="8">
-                    <v-textarea v-model="resposta" rows="2" label="Adicionar resposta:" density="compact"></v-textarea>
+                    <v-textarea v-model="resposta" rows="2" label="Adicionar resposta:" :density="display.xs ? 'default' : 'compact'" color="#0d8aa6" hide-details="auto"></v-textarea>
                 </v-col>
-                <v-col cols="12" md="4">
-                    <v-btn prepend-icon="mdi-content-save" color="success" @click="addResposta">{{ idResposta == null ? "Salvar Resposta" : "Atualizar Resposta" }}</v-btn>
+                <v-col cols="12" md="4" class="text-center">
+                    <v-btn :block="display.xs" :size="display.xs ? 'large' : 'default'" prepend-icon="mdi-content-save" color="success" @click="addResposta">{{ idResposta == null ? "Salvar Resposta" : "Atualizar Resposta" }}</v-btn>
                 </v-col>
             </v-row>
         </v-form>
@@ -14,11 +14,12 @@
         <v-data-table
             :items="store.respostas"
             :headers="cabecalho"
+            class="mt-5"
         >    
             <template v-slot:top>
                 <v-row class="mb-1">
                     <v-col>
-                        <h1 class="bg-white cor1">Respostas</h1>
+                        <h1 class="bg-white cor1 text-h6">Respostas</h1>
                     </v-col>
                     <!-- <v-col class="text-right">
                         <v-btn class="bg-cor4" @click="addResposta">Adicionar Resposta</v-btn>
@@ -43,6 +44,8 @@
 <script setup>
     import { ref, reactive } from 'vue'
     const store = useCadastroPesquisaStore();
+    import { useDisplay } from 'vuetify';
+    const display = ref(useDisplay());
     const cabecalho = [
         { title: "", align: "start", key: "botoes"},
         { title: "ID", align: "start", key: "num_ordem"},
@@ -54,6 +57,7 @@
     let resposta = ref("");
 
     const addResposta = () => {
+        if ([null, undefined, ""].includes(resposta.value)) return false;
         store.addResposta(idResposta.value, resposta.value);
         resposta.value = "";
         idResposta.value = null;

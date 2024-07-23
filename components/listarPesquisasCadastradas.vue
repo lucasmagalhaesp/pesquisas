@@ -1,16 +1,15 @@
 <template>
     <div>
+        <v-btn v-if="display.xs" :block="display.xs" :size="display.xs ? 'large' : 'default'" class="bg-cor4 mb-3" prepend-icon="mdi-plus" @click="$router.push({ path: '/pesquisas-cadastradas/criar' })">Criar Pesquisa</v-btn>
         <v-data-table
+            v-if="!display.xs"
             :items="dadosPesquisa.data"
             :headers="cabecalho"
             :loading="carregando">
             <template v-slot:top>
                 <v-row class="mb-1">
-                    <v-col>
-                        <h1 class="cor1">Pesquisas Cadastradas</h1>
-                    </v-col>
                     <v-col class="text-right">
-                        <v-btn class="bg-cor4" prepend-icon="mdi-plus" @click="$router.push({ path: 'pesquisas-cadastradas/criar' })">Criar Pesquisa</v-btn>
+                        <v-btn :block="display.xs" :size="display.xs ? 'large' : 'default'" class="bg-cor4" prepend-icon="mdi-plus" @click="$router.push({ path: '/pesquisas-cadastradas/criar' })">Criar Pesquisa</v-btn>
                     </v-col>
                 </v-row>
             </template>
@@ -26,7 +25,47 @@
                 <v-btn rounded="sm" size="small" icon="mdi-delete" color="error" @click="excluir(item.id)" />
             </template>
         </v-data-table>
-        <!-- <utilitarios-modal :show-modal="abrirModal" @modal-sim="modalOK" @modal-nao="modalCancel" /> -->
+        <v-data-iterator v-else :items="dadosPesquisa.data" :page="page" :items-per-page="itemsPerPage">
+            <template v-slot:default="{ items }">
+                <template
+                    v-for="(item, i) in pesquisasFiltradas.data"
+                    :key="i"
+                >
+                    <v-card>
+                        <v-card-title class="bg-cor3">
+                            <strong>Código:</strong> {{ item.id }}
+                        </v-card-title>
+                        <v-card-text class="pt-3 bg-cor6">
+                            <div>
+                                <strong>Título:</strong> {{ item.titulo }}
+                            </div>
+                            <div>
+                                <strong>Descrição:</strong> {{ item.descricao }}
+                            </div>
+                            <div>
+                                <strong>Data de criação:</strong> {{ item.created_at }}
+                            </div>
+                            <div>
+                                <strong>Tipo de entrevistado:</strong> {{ item.tipo_entrevistado == "A" ? "Anônimo" : "Cadastrado" }}
+                            </div>
+                            <div>
+                                <strong>Ativa:</strong> {{ item.ativa == "S" ? "Sim" : "Não" }}
+                            </div>
+                        </v-card-text>
+                        <v-row class="justify-center bg-cor6 ga-4 px-3 py-3">
+                            <v-btn rounded="sm" :block="display.xs" size="small" icon="mdi-pencil" color="primary" @click="editar(item.id)">Editar</v-btn>
+                            <v-btn rounded="sm" :block="display.xs" size="small" icon="mdi-delete" color="error" @click="excluir(item.id)">Excluir</v-btn>
+                        </v-row>
+                    </v-card>
+
+                    <br>
+                </template>
+            </template>
+            
+            <template v-slot:footer="{ pageCount }">
+                <v-pagination v-model="page" :length="pageCount" @update:modelValue="atualizarListagem"></v-pagination>
+            </template>
+        </v-data-iterator>
     </div>
     <v-dialog max-width="500" v-model="abrirModal">
         <v-card title="Confirmação" class="bg-error">
@@ -50,8 +89,6 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
-    <!-- <h1>{{ testando }}</h1> -->
-
 </template>
 
 <script setup>
@@ -61,6 +98,8 @@
     import { useData } from '../composables/formataData'
     const { formataDataBR } = useData();
     const router = useRouter();
+    import { useDisplay } from 'vuetify';
+    const display = ref(useDisplay());
     const cabecalho = [
         { title: "", align: "start", key: "botoes", width: "150"},
         { title: "Código", align: "start", key: "id"},
@@ -78,6 +117,7 @@
 
     let carregando = ref(false);
     let dadosPesquisa = reactive({data:[]});
+    let pesquisasFiltradas = reactive({data:[]});
     async function getDados(){
         carregando.value = true;
         let pesquisas = await $fetch('http://localhost:8000/api/pesquisas', {
@@ -93,6 +133,7 @@
                 ativa: item.ativa
             }
         });
+        atualizarListagem(1);
         carregando.value = false;
     }
 
@@ -122,5 +163,18 @@
     }
 
     getDados();
+
+    let page = ref(1);
+    let itemsPerPage = ref(5);
+
+    const atualizarListagem = newPage => {
+        listarPesquisas(newPage);
+    }
+
+    const listarPesquisas = page => {
+        const inicio = itemsPerPage.value * page - itemsPerPage.value;
+        const fim = itemsPerPage.value * page;
+        pesquisasFiltradas.data = dadosPesquisa.data.slice(inicio, fim);
+    }
 
 </script>

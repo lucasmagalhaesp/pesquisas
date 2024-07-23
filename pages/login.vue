@@ -1,7 +1,7 @@
 <template>
     <v-container>
-        <v-row>
-            <v-col>
+        <v-row class="justify-center">
+            <v-col cols="12" md="8">
                 <login />
             </v-col>
         </v-row>

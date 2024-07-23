@@ -1,16 +1,15 @@
 <template>
     <div>
+        <v-btn v-if="display.xs" :block="display.xs" :size="display.xs ? 'large' : 'default'" prepend-icon="mdi-clipboard-list" class="bg-cor4 mb-3" @click="$router.push({ path: '/pesquisas-realizadas/registrar' })">Registrar Pesquisa</v-btn>
         <v-data-table
+            v-if="!display.xs"
             :items="dadosPesquisa.data"
             :headers="cabecalho"
             :loading="carregando">
             <template v-slot:top>
                 <v-row class="mb-1">
-                    <v-col>
-                        <h1 class="cor1">Pesquisas Realizadas</h1>
-                    </v-col>
                     <v-col class="text-right">
-                        <v-btn prepend-icon="mdi-clipboard-list" class="bg-cor4" @click="$router.push({ path: '/pesquisas-realizadas/registrar' })">Registrar Pesquisa</v-btn>
+                        <v-btn :block="display.xs" :size="display.xs ? 'large' : 'default'" prepend-icon="mdi-clipboard-list" class="bg-cor4" @click="$router.push({ path: '/pesquisas-realizadas/registrar' })">Registrar Pesquisa</v-btn>
                     </v-col>
                 </v-row>
             </template>
@@ -22,10 +21,45 @@
                 </tr>
             </template>
             <template v-slot:item.botoes="{ item }">
-                <v-btn rounded="0" size="small" icon="mdi-pencil" color="primary" @click="editar(item.id)" />
-                <v-btn rounded="sm" size="small" icon="mdi-delete" color="error" @click="excluir(item.id)" />
+                <v-btn rounded="0" size="small" icon="mdi-view-list" color="primary" @click="visualizar(item.id)" title="Visualizar Pesquisa" />
+                <v-btn rounded="0" size="small" icon="mdi-file-pdf-box" color="info" @click="gerarRelatorio(item.id)" title="Gerar Relatório" />
             </template>
         </v-data-table>
+        <v-data-iterator v-else :items="dadosPesquisa.data" :page="page" :items-per-page="itemsPerPage">
+            <template v-slot:default="{ items }">
+                <template
+                    v-for="(item, i) in pesquisasFiltradas.data"
+                    :key="i"
+                >
+                    <v-card>
+                        <v-card-title class="bg-cor3">
+                            <strong>Código:</strong> {{ item.id }}
+                        </v-card-title>
+                        <v-card-text class="pt-3 bg-cor6">
+                            <div>
+                                <strong>Cód. Pesquisa:</strong> {{ item.pesquisa_id }}
+                            </div>
+                            <div>
+                                <strong>Título:</strong> {{ item.titulo }}
+                            </div>
+                            <div>
+                                <strong>Data de criação:</strong> {{ item.created_at }}
+                            </div>
+                        </v-card-text>
+                        <v-row class="justify-center bg-cor6 ga-4 px-3 py-3">
+                            <v-btn rounded="sm" :block="display.xs" size="small" icon="mdi-view-list" color="primary" @click="visualizar(item.id)">Visualizar Pesquisa</v-btn>
+                            <v-btn rounded="sm" :block="display.xs" size="small" icon="mdi-file-pdf-box" color="info" @click="gerarRelatorio(item.id)">Gerar Relatório</v-btn>
+                        </v-row>
+                    </v-card>
+
+                    <br>
+                </template>
+            </template>
+            
+            <template v-slot:footer="{ pageCount }">
+                <v-pagination v-model="page" :length="pageCount" @update:modelValue="atualizarListagem"></v-pagination>
+            </template>
+        </v-data-iterator>
         <utilitarios-modal :show-modal="abrirModal" @modal-sim="modalOK" @modal-nao="modalCancel" />
     </div>
     <!-- <h1>{{ testando }}</h1> -->
@@ -39,6 +73,8 @@
     import { useData } from '../composables/formataData'
     const { formataDataBR } = useData();
     const router = useRouter();
+    import { useDisplay } from 'vuetify';
+    const display = ref(useDisplay());
     const cabecalho = [
         { title: "", align: "start", key: "botoes", width: "150"},
         { title: "Código", align: "start", key: "id"},
@@ -51,6 +87,7 @@
 
     let carregando = ref(false);
     let dadosPesquisa = reactive({data:[]});
+    let pesquisasFiltradas = reactive({data:[]});
     async function getDados(){
         carregando.value = true;
         let pesquisas = await $fetch('http://localhost:8000/api/pesquisasRealizadas', {
@@ -64,6 +101,7 @@
                 created_at: item.created_at,
             }
         });
+        atualizarListagem(1);
         carregando.value = false;
     }
 
@@ -89,6 +127,26 @@
         console.log("excluir");
     }
 
+    const visualizar = id => {
+        router.push({ path: `/pesquisas-realizadas/${id}` });
+    }
+
+    const gerarRelatorio = id => {
+        window.open(`http://localhost:8000/api/pesquisasRealizadas/gerarRelatorio/${id}`, "_blank")
+    }
+
     getDados();
 
+    let page = ref(1);
+    let itemsPerPage = ref(5);
+
+    const atualizarListagem = newPage => {
+        listarPesquisas(newPage);
+    }
+
+    const listarPesquisas = page => {
+        const inicio = itemsPerPage.value * page - itemsPerPage.value;
+        const fim = itemsPerPage.value * page;
+        pesquisasFiltradas.data = dadosPesquisa.data.slice(inicio, fim);
+    }
 </script>

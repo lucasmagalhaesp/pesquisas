@@ -3,7 +3,7 @@
         <v-form>
             <v-row>
                 <v-col cols="12" md="12">
-                    <v-textarea rows="2" v-model="descricao" label="Descrição:" density="compact"></v-textarea>
+                    <v-textarea rows="2" v-model="descricao" label="Descrição:" :density="display.xs ? 'default' : 'compact'"></v-textarea>
                 </v-col>
                 <!-- <v-col cols="12" md="4">
                     <v-select
@@ -13,18 +13,17 @@
                     />
                 </v-col> -->
             </v-row>
-            <v-row>
+            <v-row class="align-center justify-center ga-4 px-3 mb-3">
+                <v-btn :block="display.xs" :size="display.xs ? 'large' : 'default'" prepend-icon="mdi-content-save" color="success" @click="salvarPergunta">Salvar</v-btn>
+                <v-btn :block="display.xs" :size="display.xs ? 'large' : 'default'" prepend-icon="mdi-cancel" color="error" @click="cancelar">Cancelar</v-btn>
+            </v-row>
+           <!--  <v-row>
                 <v-col class="gutter-sm">
                     <v-btn prepend-icon="mdi-content-save" color="success" @click="salvarPergunta">Salvar</v-btn>
                     <v-btn prepend-icon="mdi-cancel" color="error" @click="cancelar">Cancelar</v-btn>
                 </v-col>
-            </v-row>
+            </v-row> -->
         </v-form>
-        <!-- <v-row>
-            <v-col>
-                <v-btn color="primary" @click="$router.push({ path: '/pesquisas/add-pergunta' })">Adicionar Pergunta</v-btn>
-            </v-col>
-        </v-row> -->
     </div>
 </template>
 
@@ -34,6 +33,8 @@
     const store = useCadastroPesquisaStore();
     const router = useRouter();
     const route = useRoute();
+    import { useDisplay } from 'vuetify';
+    const display = ref(useDisplay());
     let descricao = ref("");
     let numOrdem = ref(2);
     const idPergunta = route.params.id ?? null;

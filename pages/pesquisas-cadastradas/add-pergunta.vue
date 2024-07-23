@@ -1,12 +1,17 @@
 <template>
     <v-container>
+        <v-row>
+            <v-col cols="12">
+                <utilitarios-titulo-pagina titulo="Adicionar Pergunta" /> 
+            </v-col>
+        </v-row>
         <v-row class="justify-center">
             <v-col cols="12" md="8">
                 <!-- <form-cadastrar-perguntas :editar="false" /> -->
                 <v-form>
                     <v-row>
                         <v-col cols="12" md="12">
-                            <v-textarea rows="2" v-model="descricao" label="Descrição:" density="compact"></v-textarea>
+                            <v-textarea rows="2" v-model="descricao" label="Descrição:" :density="display.xs ? 'default' : 'compact'" color="#0d8aa6" hide-details="auto"></v-textarea>
                         </v-col>
                         <!-- <v-col cols="12" md="4">
                             <v-select
@@ -24,11 +29,9 @@
                 <listar-respostas />
             </v-col>
         </v-row>
-        <v-row>
-            <v-col class="d-flex justify-center text-center ga-2">
-                <v-btn prepend-icon="mdi-content-save" color="success" @click="salvarPergunta">Salvar</v-btn>
-                <v-btn prepend-icon="mdi-cancel" color="error" @click="cancelar">Cancelar</v-btn>
-            </v-col>
+        <v-row class="align-center justify-center ga-4 px-3 mb-3">
+            <v-btn :block="display.xs" :size="display.xs ? 'large' : 'default'" prepend-icon="mdi-content-save" color="success" @click="salvarPergunta">Salvar</v-btn>
+            <v-btn :block="display.xs" :size="display.xs ? 'large' : 'default'" prepend-icon="mdi-cancel" color="error" @click="cancelar">Cancelar</v-btn>
         </v-row>
     </v-container>
     <v-dialog max-width="500" v-model="abrirModal">
@@ -51,6 +54,8 @@
 <script setup>
     import { ref, reactive } from "vue"
     import { useCadastroPesquisaStore } from "@/stores/cadastrarPesquisas"
+    import { useDisplay } from 'vuetify';
+    const display = ref(useDisplay());
     definePageMeta({
         middleware: [
             "auth",
