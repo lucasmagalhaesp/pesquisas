@@ -1,0 +1,79 @@
+<template>
+    <v-row>
+        <v-col cols="12" md="4">
+            <v-card variant="outlined" class="cor2">
+                <v-card-title class="text-center bg-cor3">
+                    Pesquisas Realizadas
+                </v-card-title>
+                <v-card-text class="text-center">
+                    <v-chip color="cor1" size="x-large">{{ store.dadosGerais.pesquisasRealizadas }}</v-chip>
+                </v-card-text>
+            </v-card>
+        </v-col>
+        
+        <v-col cols="12" md="4">
+            <Doughnut
+                id="my-chart-id"
+                :options="chartOptions"
+                :data="{
+                    labels,
+                    datasets: [
+                    {
+                        backgroundColor: ['#41B883', '#E46651', '#00D8FF', '#DD1B16'],
+                        data: numPesquisas
+                    }
+        ]
+                }"
+            />
+        </v-col>
+    </v-row>
+</template>
+
+<script setup>
+    import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
+    import { Doughnut } from 'vue-chartjs'
+    import { useDisplay } from 'vuetify';
+    import { useDashboardStore } from "@/stores/dashboard"
+    const store = useDashboardStore();
+
+    const getDados = async() => {
+        let dashboard = await $fetch('http://localhost:8000/api/dashboard/getPesquisasRealizadas', {
+            headers: {Authorization: `Bearer ${sessionStorage.getItem("pesquisaTokenUsuario")}`}
+        });
+        store.pesquisasRealizadas = dashboard;
+    }
+    getDados();
+
+    ChartJS.register(ArcElement, Tooltip, Legend);
+
+    /* let chartData = ref({
+        labels: ['Usuários Ativos', 'Usuários Inativos'],
+        datasets: [
+            {
+            backgroundColor: ['#41B883', '#E46651'],
+            data: [store.dadosGerais.usuariosAtivos, store.dadosGerais.usuariosInativos]
+            }
+        ]
+    }); */
+
+    const labels = computed(() => {
+        if (store.pesquisasRealizadas.length == 0) return [];
+        return store.pesquisasRealizadas.map(pesq => {
+            let primeiroItem = pesq[0];
+            return primeiroItem.pesquisa.titulo
+        });
+    });
+
+    const numPesquisas = computed(() => {
+        if (store.pesquisasRealizadas.length == 0) return [];
+        return store.pesquisasRealizadas.map(pesq => pesq.length);
+    });
+    
+    let chartOptions = ref({
+        //responsive: true
+    });
+</script>
+
+<style>
+
+</style>
