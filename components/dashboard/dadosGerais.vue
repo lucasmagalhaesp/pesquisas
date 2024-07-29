@@ -4,9 +4,12 @@
             <v-card>
                 <v-tabs
                     v-model="tab"
-                    align-tabs="center"
                     bg-color="cor3"
                     stacked
+                    :align-tabs="display.xs ? 'start' : 'center'"
+                    show-arrows
+                    :direction="display.xs ? 'vertical' : 'horizontal'"
+                    selected-class="bg-cor1"
                 >
                     <v-tab value="tab-usuarios">
                         <v-icon icon="mdi-account-group"></v-icon>
@@ -24,7 +27,7 @@
                     </v-tab>
                 </v-tabs>
 
-                <v-tabs-window v-model="tab"class="pt-3">
+                <v-tabs-window v-model="tab" class="pt-3">
                     <v-tabs-window-item value="tab-usuarios">
                         <v-card>
                             <v-card-text>
@@ -60,12 +63,13 @@
     import { useDashboardStore } from "@/stores/dashboard"
     const store = useDashboardStore();
     const display = ref(useDisplay());
-    let tab = ref("tab-usuarios");
+    let tab = ref(null)
     const getDados = async() => {
         let dashboard = await $fetch('http://localhost:8000/api/dashboard', {
             headers: {Authorization: `Bearer ${sessionStorage.getItem("pesquisaTokenUsuario")}`}
         });
         store.setDadosGerais(dashboard.dados);
+        tab.value = "tab-usuarios";
     }
     getDados();
 </script>
@@ -76,5 +80,14 @@
     }
     .v-chip__content{
         font-size: 2rem;
+    }
+
+    @media (max-width:960px){
+        .v-tabs--align-tabs-center .v-slide-group__content > *:first-child {
+            margin-inline-start: unset;
+        }
+        .v-slide-group--vertical .v-tab {
+            justify-content: center;
+        }
     }
 </style>

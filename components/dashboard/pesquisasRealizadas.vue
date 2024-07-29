@@ -11,7 +11,7 @@
             </v-card>
         </v-col>
         
-        <v-col cols="12" md="4">
+        <v-col cols="12" md="8">
             <Doughnut
                 id="my-chart-id"
                 :options="chartOptions"
@@ -22,18 +22,23 @@
                         backgroundColor: ['#41B883', '#E46651', '#00D8FF', '#DD1B16'],
                         data: numPesquisas
                     }
-        ]
+                    ]
                 }"
             />
         </v-col>
+    </v-row>
+    <v-divider class="mt-3" />
+    <v-row class="mt-5">
+        <dashboard-detalhar-perguntas />
     </v-row>
 </template>
 
 <script setup>
     import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
     import { Doughnut } from 'vue-chartjs'
-    import { useDisplay } from 'vuetify';
     import { useDashboardStore } from "@/stores/dashboard"
+    import { useDisplay } from 'vuetify';
+    const display = ref(useDisplay());
     const store = useDashboardStore();
 
     const getDados = async() => {
@@ -45,16 +50,6 @@
     getDados();
 
     ChartJS.register(ArcElement, Tooltip, Legend);
-
-    /* let chartData = ref({
-        labels: ['Usuários Ativos', 'Usuários Inativos'],
-        datasets: [
-            {
-            backgroundColor: ['#41B883', '#E46651'],
-            data: [store.dadosGerais.usuariosAtivos, store.dadosGerais.usuariosInativos]
-            }
-        ]
-    }); */
 
     const labels = computed(() => {
         if (store.pesquisasRealizadas.length == 0) return [];
@@ -70,7 +65,14 @@
     });
     
     let chartOptions = ref({
-        //responsive: true
+        plugins: {
+            legend: {
+                position: 'left'
+            }
+        },
+        
+        responsive: true,
+        maintainAspectRatio: false,
     });
 </script>
 

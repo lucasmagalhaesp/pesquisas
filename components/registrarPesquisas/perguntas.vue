@@ -1,5 +1,4 @@
 <template>
-    <div>
       <v-row>
         <v-col cols="12" md="5">
           <v-row>
@@ -34,7 +33,7 @@
                   <v-card-text class="mt-md-3" v-if="perguntas.data.length && store.perguntas_respostas.length">
                     {{ perguntas.data[step-1].descricao }}
                   </v-card-text>
-                  <v-card-text v-if="perguntas.data.length && store.perguntas_respostas.length">
+                  <v-card-text v-if="perguntas.data.length && store.perguntas_respostas.length > 0">
                     <v-radio-group v-model="store.perguntas_respostas[step-1].resposta_id" color="#0d8aa6" hide-details="auto">
                       <v-radio v-for="resposta in perguntas.data[step-1].respostas" :label="resposta.descricao" :value="resposta.id" :key="resposta.id"></v-radio>
                     </v-radio-group>
@@ -76,8 +75,6 @@
           </v-card>
         </v-col>
       </v-row>
-
-  </div>
 </template>
 
 <script setup>

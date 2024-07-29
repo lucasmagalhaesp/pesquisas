@@ -5,16 +5,7 @@ export const usePesquisasRealizadas = defineStore("pesquisasRealizadas", {
 		entrevistado_id: null,
         nome: "",
         email: "",
-		perguntas_respostas: [
-			/* {
-				"pergunta_id": 1,
-				"resposta_id": 2
-			},
-			{
-				"pergunta_id": 2,
-				"resposta_id": 4
-			} */
-		]
+		perguntas_respostas: []
     }),
     actions: {
         initPerguntasRespostas(perguntas){

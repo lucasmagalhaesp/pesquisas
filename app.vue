@@ -107,6 +107,10 @@
         {
             title: 'Pesquisas Realizadas',
             value: 'pesquisas-realizadas',
+        },
+        {
+            title: 'Dashboard',
+            value: 'dashboard',
         }
     ];
 
