@@ -118,7 +118,8 @@
 
     const logout = () => {
       abrirModal.value = false;
-      $fetch("http://localhost:8000/api/auth/logout", {
+      const config = useRuntimeConfig();
+      $fetch(`${config.public.API_PATH}auth/logout`, {
           method: "POST",
           headers: { Authorization: `Bearer ${sessionStorage.getItem("pesquisaTokenUsuario")}` }
       })

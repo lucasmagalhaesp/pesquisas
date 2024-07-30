@@ -5,7 +5,8 @@ export const usePesquisasRealizadas = defineStore("pesquisasRealizadas", {
 		entrevistado_id: null,
         nome: "",
         email: "",
-		perguntas_respostas: []
+		perguntas_respostas: [],
+        numPergunta: 1
     }),
     actions: {
         initPerguntasRespostas(perguntas){
@@ -17,7 +18,8 @@ export const usePesquisasRealizadas = defineStore("pesquisasRealizadas", {
             });
         },
         salvar(token){
-            return new Promise((ok, erro) => {$fetch("http://localhost:8000/api/pesquisasRealizadas", {
+            const config = useRuntimeConfig();
+            return new Promise((ok, erro) => {$fetch(`${config.public.API_PATH}pesquisasRealizadas`, {
                 method: "POST",
                 body: {
                     dados:
@@ -49,6 +51,7 @@ export const usePesquisasRealizadas = defineStore("pesquisasRealizadas", {
             this.perguntas_respostas = [];
             this.nome = "";
             this.email = "";
+            this.numPergunta = 1;
         }
     },
     persist: {

@@ -15,10 +15,12 @@
 
 <script setup>
     const router = useRouter()
+    const config = useRuntimeConfig();
     definePageMeta({
         middleware: [
             "auth",
             "permissao"
         ]
     });
+    console.log(config.public.API_PATH);
 </script>

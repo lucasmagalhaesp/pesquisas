@@ -5,6 +5,8 @@
             v-if="!display.xs"
             :items="dadosPesquisa.data"
             :headers="cabecalho"
+            no-data-text="Nenhum registro encontrado"
+            loading-text="Carregando..."
             :loading="carregando">
             <template v-slot:top>
                 <v-row class="mb-1">
@@ -70,7 +72,7 @@
     <v-dialog max-width="500" v-model="abrirModal">
         <v-card title="Confirmação" class="bg-error">
             <v-card-text>
-                Confirma a exclusão dessa pesquisa?
+                Confirma a inativação dessa pesquisa? Ela poderá ser reativada posteriormente.
             </v-card-text>
 
             <v-card-actions>
@@ -93,6 +95,7 @@
 
 <script setup>
     import { onMounted, ref, reactive } from 'vue'
+    const config = useRuntimeConfig();
     import { useCadastroPesquisaStore } from "@/stores/cadastrarPesquisas"
     const store = useCadastroPesquisaStore();
     import { useData } from '../composables/formataData'
@@ -120,7 +123,7 @@
     let pesquisasFiltradas = reactive({data:[]});
     async function getDados(){
         carregando.value = true;
-        let pesquisas = await $fetch('http://localhost:8000/api/pesquisas', {
+        let pesquisas = await $fetch(`${config.public.API_PATH}pesquisas`, {
             headers: { Authorization: `Bearer ${sessionStorage.getItem("pesquisaTokenUsuario")}` }
         });
         dadosPesquisa.data = pesquisas.dados.map(item => {
@@ -138,7 +141,7 @@
     }
 
     const editar = id => {
-        $fetch(`http://localhost:8000/api/pesquisas/${id}`, {
+        $fetch(`${config.public.API_PATH}pesquisas/${id}`, {
             headers: {Authorization: `Bearer ${sessionStorage.getItem("pesquisaTokenUsuario")}`}
         })
         .then(resposta => {
@@ -154,7 +157,7 @@
     }
 
     const excluirPesquisa = () => {
-        $fetch(`http://localhost:8000/api/pesquisas/${idExclusao.value}`, { method: "DELETE",
+        $fetch(`${config.public.API_PATH}pesquisas/${idExclusao.value}`, { method: "DELETE",
             headers: {Authorization: `Bearer ${sessionStorage.getItem("pesquisaTokenUsuario")}`}
          })
         .then(resposta => getDados())

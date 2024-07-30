@@ -12,3 +12,12 @@
         </v-row>
     </v-container>
 </template>
+
+<script setup>
+definePageMeta({
+    middleware: [
+        "auth",
+        "permissao"
+    ]
+});
+</script>

@@ -34,6 +34,7 @@
 </template>
 
 <script setup>
+    const config = useRuntimeConfig();
     import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
     import { Doughnut } from 'vue-chartjs'
     import { useDashboardStore } from "@/stores/dashboard"
@@ -42,7 +43,7 @@
     const store = useDashboardStore();
 
     const getDados = async() => {
-        let dashboard = await $fetch('http://localhost:8000/api/dashboard/getPesquisasRealizadas', {
+        let dashboard = await $fetch(`${config.public.API_PATH}dashboard/getPesquisasRealizadas`, {
             headers: {Authorization: `Bearer ${sessionStorage.getItem("pesquisaTokenUsuario")}`}
         });
         store.pesquisasRealizadas = dashboard;

@@ -1,9 +1,9 @@
 export const useCadastroPesquisaStore = defineStore("cadastroPesquisa", {
     state: () => ({
         id: null,
-        categoria_id: 0,
         titulo: "",
         descricao: "",
+        ativa: "S",
         tipo_entrevistado: "A",
         perguntas: [],
         respostas: []
@@ -49,23 +49,24 @@ export const useCadastroPesquisaStore = defineStore("cadastroPesquisa", {
         },
         cancelarPesquisa(){
             this.id = null;
-            this.categoria_id = 0;
             this.titulo = "";
             this.descricao = "";
+            this.ativa = "S";
             this.tipo_entrevistado = "A";
             this.perguntas = [];
             this.respostas = [];
         },
         salvarPesquisa(token){
+            const config = useRuntimeConfig();
             return new Promise((ok, error) => {
-                $fetch("http://localhost:8000/api/pesquisas", {
+                $fetch(`${config.public.API_PATH}pesquisas`, {
                     method: 'POST',
                     body: {
                         dados:{
                             id: this.id,
-                            categoria_id: 2,
                             titulo: this.titulo,
                             descricao: this.descricao,
+                            ativa: this.ativa,
                             tipo_entrevistado: this.tipo_entrevistado,
                             perguntas: this.perguntas
                         }
@@ -84,8 +85,8 @@ export const useCadastroPesquisaStore = defineStore("cadastroPesquisa", {
         },
         editarPesquisa(dados){
             this.id = dados.id;
-            this.categoria_id = dados.categoria_id;
             this.titulo = dados.titulo;
+            this.ativa = dados.ativa;
             this.descricao = dados.descricao;
             this.tipo_entrevistado = dados.tipo_entrevistado;
             this.perguntas = dados.perguntas;

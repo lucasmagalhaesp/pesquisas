@@ -63,6 +63,7 @@
 
 <script setup>
     import { ref, reactive } from "vue"
+    const config = useRuntimeConfig();
     import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
     import { Doughnut } from 'vue-chartjs'
     import { useDashboardStore } from "@/stores/dashboard"
@@ -125,7 +126,7 @@
     }
 
     const listarRespostas = async() => {
-        let resp = await $fetch('http://localhost:8000/api/dashboard/getRespostas', {
+        let resp = await $fetch(`${config.public.API_PATH}dashboard/getRespostas`, {
             headers: {Authorization: `Bearer ${sessionStorage.getItem("pesquisaTokenUsuario")}`}
         });
         respostas.data = resp;

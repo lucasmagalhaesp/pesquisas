@@ -8,5 +8,12 @@ export default defineNuxtConfig({
   ],
   css: [
     '@fortawesome/fontawesome-svg-core/styles.css'
-  ]
+  ],
+  runtimeConfig: {
+    // Make environment variables accessible here
+    public: {
+      API_PATH: process.env.API_PATH,
+      // Add more environment variables as needed
+    },
+  },
 })

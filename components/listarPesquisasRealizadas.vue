@@ -5,7 +5,10 @@
             v-if="!display.xs"
             :items="dadosPesquisa.data"
             :headers="cabecalho"
-            :loading="carregando">
+            :loading="carregando"
+            no-data-text="Nenhum registro encontrado"
+            loading-text="Carregando..."
+        >
             <template v-slot:top>
                 <v-row class="mb-1">
                     <v-col class="text-right">
@@ -68,6 +71,7 @@
 
 <script setup>
     import { onMounted, ref, reactive } from 'vue'
+    const config = useRuntimeConfig();
     import { useCadastroPesquisaStore } from "@/stores/cadastrarPesquisas"
     const store = useCadastroPesquisaStore();
     import { useData } from '../composables/formataData'
@@ -78,7 +82,9 @@
     const cabecalho = [
         { title: "", align: "start", key: "botoes", width: "150"},
         { title: "Código", align: "start", key: "id"},
-        { title: "Cód. Pesquisa", align: "start", key: "pesquisa_id"},
+        // { title: "Cód. Pesquisa", align: "start", key: "pesquisa_id"},
+        { title: "Agente", align: "start", key: "agente"},
+        { title: "Entrevistado", align: "start", key: "entrevistado"},
         { title: "Título", align: "start", key: "titulo"},
         { title: "Data de Criação", align: "start", key: "created_at" },
     ];
@@ -90,7 +96,7 @@
     let pesquisasFiltradas = reactive({data:[]});
     async function getDados(){
         carregando.value = true;
-        let pesquisas = await $fetch('http://localhost:8000/api/pesquisasRealizadas', {
+        let pesquisas = await $fetch(`${config.public.API_PATH}pesquisasRealizadas`, {
             headers: { Authorization: `Bearer ${sessionStorage.getItem("pesquisaTokenUsuario")}` }
         });
         dadosPesquisa.data = pesquisas.dados.map(item => {
@@ -99,6 +105,8 @@
                 pesquisa_id: item.pesquisa_id,
                 titulo: item.pesquisa.titulo,
                 created_at: item.created_at,
+                agente: item.agente.nome,
+                entrevistado: ![undefined, null, ''].includes(item.entrevistado) ? item.entrevistado.nome : "Anônimo"
             }
         });
         atualizarListagem(1);
@@ -106,7 +114,7 @@
     }
 
     const editar = id => {
-        $fetch(`http://localhost:8000/api/pesquisas/${id}`, {
+        $fetch(`${config.public.API_PATH}pesquisas/${id}`, {
             headers: { Authorization: `Bearer ${sessionStorage.getItem("pesquisaTokenUsuario")}` }
         })
         .then(resposta => {
@@ -132,7 +140,7 @@
     }
 
     const gerarRelatorio = id => {
-        window.open(`http://localhost:8000/api/pesquisasRealizadas/gerarRelatorio/${id}`, "_blank")
+        window.open(`${config.public.API_PATH}pesquisasRealizadas/gerarRelatorio/${id}`, "_blank")
     }
 
     getDados();

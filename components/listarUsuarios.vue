@@ -5,6 +5,8 @@
             v-if="!display.xs"
             :items="dadosUsuarios.data"
             :headers="cabecalho"
+            no-data-text="Nenhum registro encontrado"
+            loading-text="Carregando..."
             :loading="carregando"
         >
             <template v-slot:top>
@@ -73,10 +75,33 @@
         </template>
         </v-data-iterator>
     </div>
+    <v-dialog max-width="500" v-model="abrirModal">
+        <v-card title="Confirmação" class="bg-error">
+            <v-card-text>
+                Confirma a inativação desse usuário? Ele não será excluído, apenas inativado.
+            </v-card-text>
+
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                    text="SIM"
+                    @click="excluirUsuario"
+                    color="default"
+                    text-color="error"
+                    variant="flat"
+                ></v-btn>
+                <v-btn
+                    text="NÃO"
+                    @click="abrirModal = false"
+                ></v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
 </template>
 
 <script setup>
     import { onMounted, ref, reactive } from 'vue'
+    const config = useRuntimeConfig();
     import { useCadastroUsuarioStore } from "@/stores/cadastrarUsuarios"
     const store = useCadastroUsuarioStore();
     const router = useRouter();
@@ -100,7 +125,7 @@
     let usuariosFiltrados = reactive({data:[]});
     async function getDados(){
         carregando.value = true;
-        let usuarios = await $fetch('http://localhost:8000/api/usuarios', {
+        let usuarios = await $fetch(`${config.public.API_PATH}usuarios`, {
             headers: {Authorization: `Bearer ${sessionStorage.getItem("pesquisaTokenUsuario")}`}
         });
         dadosUsuarios.data = usuarios.dados;
@@ -110,7 +135,7 @@
 
     const editar = id => {
         carregandoPag.value = true;
-        $fetch(`http://localhost:8000/api/usuarios/${id}`, {
+        $fetch(`${config.public.API_PATH}usuarios/${id}`, {
             headers: {Authorization: `Bearer ${sessionStorage.getItem("pesquisaTokenUsuario")}`}
         })
         .then(resposta => {
@@ -123,7 +148,7 @@
 
     let idExclusao = ref(null);
     const excluirUsuario = () => {
-        $fetch(`http://localhost:8000/api/usuarios/${idExclusao.value}`, { method: "DELETE", 
+        $fetch(`${config.public.API_PATH}usuarios/${idExclusao.value}`, { method: "DELETE", 
             headers: {Authorization: `Bearer ${sessionStorage.getItem("pesquisaTokenUsuario")}`}
          })
         .then(resposta => {
@@ -136,7 +161,6 @@
     const modalCancel = () => alert("Operação cancelada");
 
     const excluir = id => {
-        console.log(id);
         abrirModal.value = true;
         idExclusao.value = id;
     }

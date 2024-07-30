@@ -19,8 +19,9 @@ export const useCadastroUsuarioStore = defineStore("cadastroUsuario", {
             this.ativo = dados.ativo;
         },
         salvarUsuario(token){
+            const config = useRuntimeConfig();
             return new Promise((ok, error) => {
-                $fetch("http://localhost:8000/api/usuarios", {
+                $fetch(`${config.public.API_PATH}usuarios`, {
                     method: "POST",
                     body: {
                         dados:{

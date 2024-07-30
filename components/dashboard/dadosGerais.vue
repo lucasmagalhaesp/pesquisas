@@ -59,13 +59,14 @@
 
 <script setup>
     import { ref, reactive } from 'vue'
+    const config = useRuntimeConfig();
     import { useDisplay } from 'vuetify';
     import { useDashboardStore } from "@/stores/dashboard"
     const store = useDashboardStore();
     const display = ref(useDisplay());
     let tab = ref(null)
     const getDados = async() => {
-        let dashboard = await $fetch('http://localhost:8000/api/dashboard', {
+        let dashboard = await $fetch(`${config.public.API_PATH}dashboard`, {
             headers: {Authorization: `Bearer ${sessionStorage.getItem("pesquisaTokenUsuario")}`}
         });
         store.setDadosGerais(dashboard.dados);

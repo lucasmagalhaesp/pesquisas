@@ -55,6 +55,7 @@
 
 <script setup>
     import { useGeralStore } from "@/stores/geral"
+    const config = useRuntimeConfig();
     import { useDisplay } from 'vuetify';
     const display = ref(useDisplay());
     const store = useGeralStore();
@@ -66,7 +67,7 @@
 
     const entrar = () => {
         validando.value = true;
-        $fetch("http://localhost:8000/api/auth/login", {
+        $fetch(`${config.public.API_PATH}auth/login`, {
             method: "POST",
             credentials: "same-origin",
             body: {

@@ -15,7 +15,7 @@
         <v-col cols="12" md="4">
             <strong>Tipo do entrevistado:</strong> {{ dadosPesquisa.dados.pesquisa.tipo_entrevistado == "A" ? "Anônimo" : "Cadastrado" }}
         </v-col>
-        <v-col v-if="dadosPesquisa.dados.pesquisa.tipo_entrevistado == 'C'" cols="12" md="4">
+        <v-col v-if="dadosPesquisa.dados.pesquisa.tipo_entrevistado == 'C'" cols="12" md="8">
             <strong>Nome do entrevistado:</strong> {{ dadosPesquisa.dados.entrevistado.nome }}
         </v-col>
     </v-row>
@@ -49,13 +49,14 @@
 <script setup>
     const route = useRoute();
     const router = useRouter();
+    const config = useRuntimeConfig();
     let dadosPesquisa = reactive({dados: null});
     let perguntas = reactive({ data:[] });
     const idPesquisa = route.params.id ?? null;
     let carregando = ref(false);
     async function getDados(){
         carregando.value = true;
-        let pesquisas = await $fetch(`http://localhost:8000/api/pesquisasRealizadas/visualizar/${idPesquisa}`, {
+        let pesquisas = await $fetch(`${config.public.API_PATH}pesquisasRealizadas/visualizar/${idPesquisa}`, {
             headers: { Authorization: `Bearer ${sessionStorage.getItem("pesquisaTokenUsuario")}` }
         });
         

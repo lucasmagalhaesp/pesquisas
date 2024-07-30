@@ -15,6 +15,8 @@
             :items="store.respostas"
             :headers="cabecalho"
             class="mt-5"
+            no-data-text="Nenhum registro encontrado"
+            loading-text="Carregando..."
         >    
             <template v-slot:top>
                 <v-row class="mb-1">

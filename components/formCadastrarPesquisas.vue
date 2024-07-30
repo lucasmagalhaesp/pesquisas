@@ -12,7 +12,13 @@
                 <v-radio-group v-model="store.tipo_entrevistado" color="#0d8aa6" hide-details="auto">
                     <v-radio label="Anônimo" value="A"></v-radio>
                     <v-radio label="Cadastrado" value="C"></v-radio>
-                    <!-- <v-radio label="Ambos" value="ambos"></v-radio> -->
+                </v-radio-group>
+            </v-col>
+            <v-col cols="12" md="4">
+                <p>Ativa?</p>
+                <v-radio-group v-model="store.ativa" inline color="#0d8aa6" hide-details="auto" :density="display.xs ? 'default' : 'compact'">
+                    <v-radio label="Sim" value="S"></v-radio>
+                    <v-radio label="Não" value="N"></v-radio>
                 </v-radio-group>
             </v-col>
         </v-row>
