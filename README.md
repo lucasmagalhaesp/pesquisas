@@ -11,9 +11,7 @@
 
 Esse sistema é uma SPA desenvolvida em vuejs (utilizando o Nuxt 3 e o vuetify), que consome uma api PHP, que utiliza o framework Laravel (repositório apipesquisas)
 
-## Setup
-
-Instale suas dependências:
+## Instale suas dependências
 
 ```bash
 # npm
@@ -29,7 +27,7 @@ yarn install
 bun install
 ```
 
-## Development Server
+## Inicie a aplicação em ambiente de desenvolvimento
 
 Inicie a aplicação em ambiente de desenvolvimento no endereço `http://localhost:3000`:
 
@@ -49,7 +47,7 @@ bun run dev
 
 Renomeie o arquivo `.env.example` para `.env`, edite-o e informe o caminho da API, como por exemplo `http://localhost:8000/api/`
 
-## Production
+## Gerando os arquivos para colocar em produção
 
 Gerando os arquivos para colocar em produção:
 
