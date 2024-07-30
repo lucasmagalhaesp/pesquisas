@@ -1,10 +1,19 @@
-# Nuxt 3 Minimal Starter
+# Pesquisas de Opinião
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+## Para que serve o sistema?
+
+É um sistema simples para realizar pesquisas de opinião em geral. Através dele você pode:
+  - cadastrar os usuários (Administrador, Agente (Entrevistador) e Entrevistado);
+  - cadastrar e registrar as pesquisas;
+  - disponibiza um dashboard onde usuários Administradores poderão acompanhar as estatísticas do sistema, detalhando todas as pesquisas, com suas perguntas e respostas.
+
+## Tecnologias Utilizadas no sistema
+
+Esse sistema é uma SPA desenvolvida em vuejs (utilizando o Nuxt 3 e o vuetify), que consome uma api PHP, que utiliza o framework Laravel (repositório apipesquisas)
 
 ## Setup
 
-Make sure to install the dependencies:
+Instale suas dependências:
 
 ```bash
 # npm
@@ -22,7 +31,7 @@ bun install
 
 ## Development Server
 
-Start the development server on `http://localhost:3000`:
+Inicie a aplicação em ambiente de desenvolvimento no endereço `http://localhost:3000`:
 
 ```bash
 # npm
@@ -38,9 +47,11 @@ yarn dev
 bun run dev
 ```
 
+Renomeie o arquivo `.env.example` para `.env`, edite-o e informe o caminho da API, como por exemplo `http://localhost:8000/api/`
+
 ## Production
 
-Build the application for production:
+Gerando os arquivos para colocar em produção:
 
 ```bash
 # npm
@@ -55,21 +66,3 @@ yarn build
 # bun
 bun run build
 ```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
