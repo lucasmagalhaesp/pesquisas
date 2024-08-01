@@ -6,7 +6,13 @@ export const useCadastroPesquisaStore = defineStore("cadastroPesquisa", {
         ativa: "S",
         tipo_entrevistado: "A",
         perguntas: [],
-        respostas: []
+        respostas: [],
+        filtros: {
+            titulo: "",
+            descricao: "",
+            ativa: "T",
+            tipo_entrevistado: "T"
+        }
     }),
     actions: {
         getPergunta(id){
@@ -90,6 +96,12 @@ export const useCadastroPesquisaStore = defineStore("cadastroPesquisa", {
             this.descricao = dados.descricao;
             this.tipo_entrevistado = dados.tipo_entrevistado;
             this.perguntas = dados.perguntas;
+        },
+        limparFiltros(){
+            this.filtros.titulo = "";
+            this.filtros.descricao = "";
+            this.filtros.ativa = "T";
+            this.filtros.tipo_entrevistado = "T";
         }
     },
     persist: {

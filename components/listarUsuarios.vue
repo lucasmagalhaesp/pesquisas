@@ -1,6 +1,7 @@
 <template>
     <div>
-        <v-btn v-if="display.xs" :block="display.xs" :size="display.xs ? 'large' : 'default'" class="bg-cor4 mb-3" prepend-icon="mdi-plus" rounded="sm" @click="$router.push({ path: 'usuarios/criar' })">Novo Usuário </v-btn>
+        <v-btn v-if="display.xs" :block="display.xs" :size="display.xs ? 'large' : 'default'" class="bg-cor2" prepend-icon="mdi-filter" rounded="sm" @click="filtUsuarios = !filtUsuarios">Filtrar </v-btn>
+        <v-btn v-if="display.xs" :block="display.xs" :size="display.xs ? 'large' : 'default'" class="bg-cor4 my-3" prepend-icon="mdi-plus" rounded="sm" @click="$router.push({ path: 'usuarios/criar' })">Novo Usuário </v-btn>
         <v-data-table
             v-if="!display.xs"
             :items="dadosUsuarios.data"
@@ -10,10 +11,9 @@
             :loading="carregando"
         >
             <template v-slot:top>
-                <v-row class="mb-1">
-                    <v-col class="text-right">
-                        <v-btn :block="display.xs" :size="display.xs ? 'large' : 'default'" class="bg-cor4" prepend-icon="mdi-plus" rounded="sm" @click="$router.push({ path: 'usuarios/criar' })">Novo Usuário </v-btn>
-                    </v-col>
+                <v-row class="mb-1 justify-end ga-3" :class="!display.xs ? 'pr-3' : ''">
+                    <v-btn :block="display.xs" :size="display.xs ? 'large' : 'default'" class="bg-cor2" prepend-icon="mdi-filter" rounded="sm" @click="filtUsuarios = !filtUsuarios">Filtrar </v-btn>
+                    <v-btn :block="display.xs" :size="display.xs ? 'large' : 'default'" class="bg-cor4" prepend-icon="mdi-plus" rounded="sm" @click="$router.push({ path: 'usuarios/criar' })">Novo Usuário </v-btn>
                 </v-row>
             </template>
             <template v-slot:item.botoes="{ item }">
@@ -97,10 +97,12 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
+    <filtrar-usuarios :abrir-opcoes="filtUsuarios" @getDados="getDados" />
 </template>
 
 <script setup>
     import { onMounted, ref, reactive } from 'vue'
+    const filtUsuarios = ref(false);
     const config = useRuntimeConfig();
     import { useCadastroUsuarioStore } from "@/stores/cadastrarUsuarios"
     const store = useCadastroUsuarioStore();
@@ -125,7 +127,9 @@
     let usuariosFiltrados = reactive({data:[]});
     async function getDados(){
         carregando.value = true;
-        let usuarios = await $fetch(`${config.public.API_PATH}usuarios`, {
+        let usuarios = await $fetch(`${config.public.API_PATH}usuarios/getDados`, {
+            method: "POST",
+            body: { filtros: store.filtros },
             headers: {Authorization: `Bearer ${sessionStorage.getItem("pesquisaTokenUsuario")}`}
         });
         dadosUsuarios.data = usuarios.dados;

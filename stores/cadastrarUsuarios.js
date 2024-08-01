@@ -6,7 +6,13 @@ export const useCadastroUsuarioStore = defineStore("cadastroUsuario", {
         senha: "",
         confirmar_senha: "",
         perfil_usuario_id: 3,
-        ativo: "S"
+        ativo: "S",
+        filtros:{
+            nome: "",
+            email: "",
+            perfil_usuario_id: 0,
+            ativo: "T",
+        }
     }),
     actions: {
         editarUsuario(dados){
@@ -55,6 +61,12 @@ export const useCadastroUsuarioStore = defineStore("cadastroUsuario", {
             this.perfil_usuario_id = 3;
             this.ativo = "S";
         },
+        limparFiltros(){
+            this.filtros.nome = "";
+            this.filtros.email = "";
+            this.filtros.perfil_usuario_id = 0;
+            this.filtros.ativo = "T";
+        }
     },
     persist: {
         storage: persistedState.sessionStorage,

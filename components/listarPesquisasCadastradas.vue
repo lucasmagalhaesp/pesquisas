@@ -1,6 +1,7 @@
 <template>
     <div>
-        <v-btn v-if="display.xs" :block="display.xs" :size="display.xs ? 'large' : 'default'" class="bg-cor4 mb-3" prepend-icon="mdi-plus" @click="$router.push({ path: '/pesquisas-cadastradas/criar' })">Criar Pesquisa</v-btn>
+        <v-btn v-if="display.xs" :block="display.xs" :size="display.xs ? 'large' : 'default'" class="bg-cor2" prepend-icon="mdi-filter" rounded="sm" @click="filtPesquisas = !filtPesquisas">Filtrar </v-btn>
+        <v-btn v-if="display.xs" :block="display.xs" :size="display.xs ? 'large' : 'default'" class="bg-cor4 my-3" prepend-icon="mdi-plus" @click="$router.push({ path: '/pesquisas-cadastradas/criar' })">Criar Pesquisa</v-btn>
         <v-data-table
             v-if="!display.xs"
             :items="dadosPesquisa.data"
@@ -9,10 +10,9 @@
             loading-text="Carregando..."
             :loading="carregando">
             <template v-slot:top>
-                <v-row class="mb-1">
-                    <v-col class="text-right">
-                        <v-btn :block="display.xs" :size="display.xs ? 'large' : 'default'" class="bg-cor4" prepend-icon="mdi-plus" @click="$router.push({ path: '/pesquisas-cadastradas/criar' })">Criar Pesquisa</v-btn>
-                    </v-col>
+                <v-row class="mb-1 justify-end ga-3" :class="!display.xs ? 'pr-3' : ''">
+                    <v-btn :block="display.xs" :size="display.xs ? 'large' : 'default'" class="bg-cor2" prepend-icon="mdi-filter" rounded="sm" @click="filtPesquisas = !filtPesquisas">Filtrar </v-btn>
+                    <v-btn :block="display.xs" :size="display.xs ? 'large' : 'default'" class="bg-cor4" prepend-icon="mdi-plus" @click="$router.push({ path: '/pesquisas-cadastradas/criar' })">Criar Pesquisa</v-btn>
                 </v-row>
             </template>
             <template v-slot:headers="{ columns }">
@@ -91,6 +91,7 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
+    <filtrar-pesquisas-cadastradas :abrir-opcoes="filtPesquisas" @getDados="getDados" />
 </template>
 
 <script setup>
@@ -103,6 +104,7 @@
     const router = useRouter();
     import { useDisplay } from 'vuetify';
     const display = ref(useDisplay());
+    const filtPesquisas = ref(false);
     const cabecalho = [
         { title: "", align: "start", key: "botoes", width: "150"},
         { title: "Código", align: "start", key: "id"},
@@ -123,7 +125,9 @@
     let pesquisasFiltradas = reactive({data:[]});
     async function getDados(){
         carregando.value = true;
-        let pesquisas = await $fetch(`${config.public.API_PATH}pesquisas`, {
+        let pesquisas = await $fetch(`${config.public.API_PATH}pesquisas/getDados`, {
+            method: "POST",
+            body: { filtros: store.filtros },
             headers: { Authorization: `Bearer ${sessionStorage.getItem("pesquisaTokenUsuario")}` }
         });
         dadosPesquisa.data = pesquisas.dados.map(item => {

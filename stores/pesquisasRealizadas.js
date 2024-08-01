@@ -6,7 +6,12 @@ export const usePesquisasRealizadas = defineStore("pesquisasRealizadas", {
         nome: "",
         email: "",
 		perguntas_respostas: [],
-        numPergunta: 1
+        numPergunta: 1,
+        filtros:{
+            usuario_id: null,
+            entrevistado_id: null,
+            pesquisa_id: null
+        }
     }),
     actions: {
         initPerguntasRespostas(perguntas){
@@ -52,6 +57,11 @@ export const usePesquisasRealizadas = defineStore("pesquisasRealizadas", {
             this.nome = "";
             this.email = "";
             this.numPergunta = 1;
+        },
+        limparFiltros(){
+            this.filtros.usuario_id = null;
+            this.filtros.entrevistado_id = null;
+            this.filtros.pesquisa_id = null;
         }
     },
     persist: {

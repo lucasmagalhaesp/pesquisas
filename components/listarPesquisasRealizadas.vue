@@ -1,5 +1,6 @@
 <template>
     <div>
+        <v-btn v-if="display.xs" :block="display.xs" :size="display.xs ? 'large' : 'default'" class="bg-cor2" prepend-icon="mdi-filter" rounded="sm" @click="filtPesquisas = !filtPesquisas">Filtrar </v-btn>
         <v-btn v-if="display.xs" :block="display.xs" :size="display.xs ? 'large' : 'default'" prepend-icon="mdi-clipboard-list" class="bg-cor4 mb-3" @click="$router.push({ path: '/pesquisas-realizadas/registrar' })">Registrar Pesquisa</v-btn>
         <v-data-table
             v-if="!display.xs"
@@ -10,10 +11,9 @@
             loading-text="Carregando..."
         >
             <template v-slot:top>
-                <v-row class="mb-1">
-                    <v-col class="text-right">
-                        <v-btn :block="display.xs" :size="display.xs ? 'large' : 'default'" prepend-icon="mdi-clipboard-list" class="bg-cor4" @click="$router.push({ path: '/pesquisas-realizadas/registrar' })">Registrar Pesquisa</v-btn>
-                    </v-col>
+                <v-row class="mb-1 justify-end ga-3" :class="!display.xs ? 'pr-3' : ''">
+                    <v-btn :block="display.xs" :size="display.xs ? 'large' : 'default'" class="bg-cor2" prepend-icon="mdi-filter" rounded="sm" @click="filtPesquisas = !filtPesquisas">Filtrar </v-btn>
+                    <v-btn :block="display.xs" :size="display.xs ? 'large' : 'default'" prepend-icon="mdi-clipboard-list" class="bg-cor4" @click="$router.push({ path: '/pesquisas-realizadas/registrar' })">Registrar Pesquisa</v-btn>
                 </v-row>
             </template>
             <template v-slot:headers="{ columns }">
@@ -63,22 +63,23 @@
                 <v-pagination v-model="page" :length="pageCount" @update:modelValue="atualizarListagem"></v-pagination>
             </template>
         </v-data-iterator>
-        <utilitarios-modal :show-modal="abrirModal" @modal-sim="modalOK" @modal-nao="modalCancel" />
     </div>
-    <!-- <h1>{{ testando }}</h1> -->
+    
+    <filtrar-pesquisas-realizadas :abrir-opcoes="filtPesquisas" @getDados="getDados" />
 
 </template>
 
 <script setup>
     import { onMounted, ref, reactive } from 'vue'
     const config = useRuntimeConfig();
-    import { useCadastroPesquisaStore } from "@/stores/cadastrarPesquisas"
-    const store = useCadastroPesquisaStore();
+    import { usePesquisasRealizadas } from "@/stores/pesquisasRealizadas"
+    const store = usePesquisasRealizadas();
     import { useData } from '../composables/formataData'
     const { formataDataBR } = useData();
     const router = useRouter();
     import { useDisplay } from 'vuetify';
     const display = ref(useDisplay());
+    const filtPesquisas = ref(false);
     const cabecalho = [
         { title: "", align: "start", key: "botoes", width: "150"},
         { title: "Código", align: "start", key: "id"},
@@ -96,7 +97,9 @@
     let pesquisasFiltradas = reactive({data:[]});
     async function getDados(){
         carregando.value = true;
-        let pesquisas = await $fetch(`${config.public.API_PATH}pesquisasRealizadas`, {
+        let pesquisas = await $fetch(`${config.public.API_PATH}pesquisasRealizadas/getDados`, {
+            method: "POST",
+            body: { filtros: store.filtros },
             headers: { Authorization: `Bearer ${sessionStorage.getItem("pesquisaTokenUsuario")}` }
         });
         dadosPesquisa.data = pesquisas.dados.map(item => {
@@ -113,7 +116,7 @@
         carregando.value = false;
     }
 
-    const editar = id => {
+    /* const editar = id => {
         $fetch(`${config.public.API_PATH}pesquisas/${id}`, {
             headers: { Authorization: `Bearer ${sessionStorage.getItem("pesquisaTokenUsuario")}` }
         })
@@ -122,13 +125,7 @@
             router.push({ path: "/pesquisas/criar" });
         })
         .catch(erro => console.error(erro));
-    }
-
-    const modalOK = () => {
-        alert("Exclusão confirmada com sucesso");
-    }
-
-    const modalCancel = () => alert("Operação cancelada");
+    } */
 
     function excluir(){
         abrirModal.value = !abrirModal.value;
